@@ -68,10 +68,12 @@ No Docker, no database, no environment secrets required.
 - Parameter input with validation (Pydantic bounds checking)
 - 5-year DCF projection (compound revenue growth, flat margin)
 - Per-year discount factor and present value of FCF
-- Enterprise value as NPV of FCF stream
-- Summary panel (EV, Year 5 revenue, Year 5 FCF, discount rate)
-- Detail table (year, revenue, FCF, discount factor, PV of FCF)
+- Enterprise value as NPV of FCF stream (no terminal value)
+- Summary panel with currency formatting (EV, Y5 revenue, Y5 FCF, discount rate)
+- Yearly projection table (revenue, FCF, discount factor, PV of FCF)
+- All values displayed in USD with consistent formatting
 - Error display for invalid inputs
+- Health check endpoint (`GET /healthz`)
 
 ## What Is Not Implemented
 

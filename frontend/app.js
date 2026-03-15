@@ -10,6 +10,10 @@
     var runBtn = document.getElementById('run-btn');
 
     function fmtCurrency(n) {
+        return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function fmtCurrencyTable(n) {
         return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
@@ -47,9 +51,9 @@
 
         // Summary panel
         summaryGrid.innerHTML = '';
-        summaryGrid.appendChild(makeSummaryItem('Enterprise Value (NPV)', fmtCurrency(data.enterprise_value), 'summary-primary'));
-        summaryGrid.appendChild(makeSummaryItem('Year 5 Revenue', fmtCurrency(lastYear.revenue)));
-        summaryGrid.appendChild(makeSummaryItem('Year 5 FCF', fmtCurrency(lastYear.fcf)));
+        summaryGrid.appendChild(makeSummaryItem('Enterprise Value', fmtCurrency(data.enterprise_value), 'summary-primary'));
+        summaryGrid.appendChild(makeSummaryItem('Y5 Revenue', fmtCurrency(lastYear.revenue)));
+        summaryGrid.appendChild(makeSummaryItem('Y5 Free Cash Flow', fmtCurrency(lastYear.fcf)));
         summaryGrid.appendChild(makeSummaryItem('Discount Rate', fmtPct(data.params.discount_rate)));
 
         // Detail table
@@ -60,10 +64,10 @@
 
             var cells = [
                 { text: 'Y' + y.year, cls: '' },
-                { text: fmtCurrency(y.revenue), cls: 'num' },
-                { text: fmtCurrency(y.fcf), cls: 'num' },
+                { text: fmtCurrencyTable(y.revenue), cls: 'num' },
+                { text: fmtCurrencyTable(y.fcf), cls: 'num' },
                 { text: fmtFactor(y.discount_factor), cls: 'num dim' },
-                { text: fmtCurrency(y.pv_fcf), cls: 'num' }
+                { text: fmtCurrencyTable(y.pv_fcf), cls: 'num' }
             ];
 
             for (var j = 0; j < cells.length; j++) {

@@ -24,9 +24,9 @@
         <section class="card">
             <div class="page-title">DCF Valuation</div>
             <p class="description">
-                Interactive example of a deterministic financial model runtime.
-                Modify the parameters and run a 5-year discounted cash flow model.
+                5-year discounted cash flow model. Modify the assumptions and run.
             </p>
+            <p class="unit-note">All values in USD. Units are illustrative.</p>
 
             <form id="dcf-form">
                 <div class="input-grid">
@@ -53,22 +53,26 @@
         </section>
 
         <section id="results" class="card hidden">
-            <h2>Results</h2>
+            <h2>Model Output</h2>
 
             <div class="summary-grid" id="summary-grid"></div>
 
+            <p class="table-caption">Yearly projection</p>
             <table id="results-table">
                 <thead>
                     <tr>
                         <th>Year</th>
-                        <th class="num">Revenue</th>
-                        <th class="num">FCF</th>
+                        <th class="num">Revenue ($)</th>
+                        <th class="num">FCF ($)</th>
                         <th class="num">Discount Factor</th>
-                        <th class="num">PV of FCF</th>
+                        <th class="num">PV of FCF ($)</th>
                     </tr>
                 </thead>
                 <tbody id="results-body"></tbody>
             </table>
+            <p class="result-note">
+                5-year projection only. No terminal value included.
+            </p>
         </section>
 
         <section id="error" class="card error-card hidden">
@@ -77,12 +81,18 @@
         </section>
 
         <section class="note">
-            <strong>How this works</strong> &mdash;
-            Parameters are submitted to a FastAPI backend that runs deterministic DCF
-            logic. The NPV calculation uses Excel semantics (discount from t=1),
-            matching fin123-core's formula engine. The current runner implements
-            the math directly; fin123-core Workbook execution can be wired in
-            as a drop-in replacement.
+            <p>Deterministic DCF runtime matching
+            <a href="https://github.com/reckoning-machines/fin123-core">fin123-core</a>
+            NPV semantics.</p>
+            <details>
+                <summary>About this demo</summary>
+                <p>
+                    Parameters are submitted to a FastAPI backend that evaluates
+                    a 5-year DCF model. NPV uses Excel semantics (discount from t=1).
+                    The runner implements the math directly; fin123-core Workbook
+                    execution can replace it as a drop-in.
+                </p>
+            </details>
         </section>
     </main>
 
