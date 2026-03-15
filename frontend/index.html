@@ -39,13 +39,11 @@
         <section class="card">
             <div class="page-title">Compiled Spreadsheet Runtime</div>
             <p class="description">
-                This demo shows a DCF valuation model compiled into a deterministic worksheet artifact.
-                The application below does not implement the financial logic &mdash; it executes the
-                compiled artifact directly. The artifact contains the compiled calculation graph,
-                not just exported numbers.
+                This is a DCF valuation model compiled into a worksheet that runs headlessly.
+                The application below has no model logic in it. It runs the compiled worksheet directly.
             </p>
             <p class="description" style="margin-bottom: 8px;">
-                Spreadsheet &rarr; Compile &rarr; Artifact &rarr; Runtime &rarr; Application
+                Spreadsheet &rarr; Compile &rarr; Compiled Worksheet &rarr; Runtime &rarr; Application
             </p>
         </section>
 
@@ -53,7 +51,7 @@
         <section class="card">
             <div class="page-title">DCF Valuation</div>
             <p class="description">
-                5-year discounted cash flow model. Modify the assumptions, build a compiled artifact, release it, and run.
+                5-year DCF. Change the assumptions, compile the model, release it, run it.
             </p>
             <p class="unit-note">All values in USD. Units are illustrative.</p>
 
@@ -99,9 +97,9 @@
         <section id="runtime-section" class="card">
             <h2>Application Runtime</h2>
             <p class="section-explain">
-                Execution source: compiled worksheet artifact.
-                These values come from the released artifact, not from application code.
-                The spreadsheet model remains the source of truth.
+                Execution source: compiled worksheet.
+                These values come from the released model, not from application code.
+                The application never reimplements the model logic.
             </p>
             <div id="runtime-meta"></div>
             <div id="runtime-content">
@@ -111,11 +109,11 @@
 
         <!-- Section 5: Artifact Inspector -->
         <section id="artifact-section" class="card artifact-panel hidden">
-            <h2 class="artifact-heading">Inspect Compiled Artifact</h2>
+            <h2 class="artifact-heading">Inspect Compiled Worksheet</h2>
             <p class="section-explain">
-                The compiled worksheet artifact generated during Build. Contains the calculation
-                graph, schema, display formatting, and full provenance &mdash; not just exported values.
-                <strong>Any fin123 runtime can execute this artifact headlessly.</strong>
+                This is the compiled model from the Build step. It contains the calculation graph,
+                schema, display formatting, and full audit trail &mdash; not just exported numbers.
+                <strong>Any fin123 runtime can execute this headlessly at scale.</strong>
             </p>
             <div id="worksheet-container"></div>
         </section>
@@ -129,14 +127,14 @@
         <section class="note">
             <p>Compiled by
             <a href="https://github.com/reckoning-machines/fin123-core">fin123-core</a>.
-            The model logic lives in the worksheet artifact, not in this application.</p>
+            The model logic lives in the compiled worksheet, not in this application.</p>
             <details>
                 <summary>About this demo</summary>
                 <p>
-                    The analyst defines model assumptions. fin123 compiles them into a
-                    deterministic worksheet artifact with a content hash. The application
-                    executes the released artifact directly &mdash; no spreadsheet logic
-                    is reimplemented in Python or JavaScript.
+                    The analyst sets model assumptions. fin123 compiles them into a
+                    deterministic worksheet with a content hash. The application runs
+                    the released version directly &mdash; no model logic is reimplemented
+                    in Python or JavaScript. The compiled worksheet runs headlessly at scale.
                 </p>
             </details>
         </section>
