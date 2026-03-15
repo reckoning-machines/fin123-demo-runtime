@@ -80,14 +80,23 @@
             </div>
         </section>
 
-        <!-- Section 4: Runtime Output -->
+        <!-- Section 4: Application Runtime -->
         <section id="runtime-section" class="card">
-            <h2>Runtime Output</h2>
+            <h2>Application Runtime</h2>
+            <p class="section-explain">Values produced by executing the released model artifact.</p>
             <div id="runtime-meta"></div>
             <div id="runtime-content">
                 <p class="empty-state">No released artifact yet.</p>
             </div>
-            <h3 class="worksheet-heading hidden" id="worksheet-heading">Released Worksheet Artifact</h3>
+        </section>
+
+        <!-- Section 5: Artifact Inspector -->
+        <section id="artifact-section" class="card artifact-panel hidden">
+            <h2 class="artifact-heading">Inspect Compiled Artifact</h2>
+            <p class="section-explain">
+                The compiled worksheet artifact generated during Build.
+                Applications execute this artifact rather than re-implementing spreadsheet logic.
+            </p>
             <div id="worksheet-container"></div>
         </section>
 

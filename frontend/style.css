@@ -385,13 +385,22 @@ tbody tr:last-child td { border-bottom: none; }
     border-color: var(--border);
 }
 
-.worksheet-heading {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--fg-dim);
-    margin-top: 20px;
-    margin-bottom: 8px;
+/* Artifact inspector panel */
+.artifact-panel {
+    background: var(--bg);
+    border-style: dashed;
+}
+
+.artifact-heading {
+    font-size: 13px;
     letter-spacing: 0.2px;
+}
+
+.section-explain {
+    font-size: 11px;
+    color: var(--fg-dim);
+    line-height: 1.6;
+    margin-bottom: 16px;
 }
 
 #worksheet-container {

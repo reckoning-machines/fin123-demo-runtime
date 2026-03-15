@@ -6,7 +6,7 @@
     var releaseContent = document.getElementById('release-content');
     var runtimeMeta = document.getElementById('runtime-meta');
     var runtimeContent = document.getElementById('runtime-content');
-    var worksheetHeading = document.getElementById('worksheet-heading');
+    var artifactSection = document.getElementById('artifact-section');
     var worksheetContainer = document.getElementById('worksheet-container');
     var errorSection = document.getElementById('error');
     var errorMessage = document.getElementById('error-message');
@@ -167,14 +167,14 @@
     }
 
     function renderWorksheet() {
-        worksheetHeading.classList.add('hidden');
+        artifactSection.classList.add('hidden');
         worksheetContainer.innerHTML = '';
         api('GET', '/artifact/released')
             .then(function (ws) {
-                worksheetHeading.classList.remove('hidden');
+                artifactSection.classList.remove('hidden');
                 WorksheetViewer.render(worksheetContainer, ws);
             })
-            .catch(function () { /* no artifact yet — leave empty */ });
+            .catch(function () { /* no artifact yet — leave hidden */ });
     }
 
     // ── Actions ──
