@@ -39,9 +39,10 @@
         <section class="card">
             <div class="page-title">Compiled Spreadsheet Runtime</div>
             <p class="description">
-                This demo shows a spreadsheet model compiled into a deterministic worksheet artifact.
+                This demo shows a DCF valuation model compiled into a deterministic worksheet artifact.
                 The application below does not implement the financial logic &mdash; it executes the
-                compiled artifact directly.
+                compiled artifact directly. The artifact contains the compiled calculation graph,
+                not just exported numbers.
             </p>
             <p class="description" style="margin-bottom: 8px;">
                 Spreadsheet &rarr; Compile &rarr; Artifact &rarr; Runtime &rarr; Application
@@ -98,8 +99,9 @@
         <section id="runtime-section" class="card">
             <h2>Application Runtime</h2>
             <p class="section-explain">
-                These values come from the compiled worksheet artifact, not from application code.
-                The application calls the released artifact &mdash; the spreadsheet remains the source of truth.
+                Execution source: compiled worksheet artifact.
+                These values come from the released artifact, not from application code.
+                The spreadsheet model remains the source of truth.
             </p>
             <div id="runtime-meta"></div>
             <div id="runtime-content">
@@ -111,10 +113,9 @@
         <section id="artifact-section" class="card artifact-panel hidden">
             <h2 class="artifact-heading">Inspect Compiled Artifact</h2>
             <p class="section-explain">
-                The compiled worksheet artifact generated during Build.
-                The artifact contains the worksheet specification, schema, and provenance.
-                Applications execute this artifact rather than re-implementing spreadsheet logic.
-                <strong>This artifact can be executed headlessly by any fin123 runtime.</strong>
+                The compiled worksheet artifact generated during Build. Contains the calculation
+                graph, schema, display formatting, and full provenance &mdash; not just exported values.
+                <strong>Any fin123 runtime can execute this artifact headlessly.</strong>
             </p>
             <div id="worksheet-container"></div>
         </section>
