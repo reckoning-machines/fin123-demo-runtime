@@ -35,11 +35,24 @@
             <button id="reset-btn" class="btn-reset" title="Clear all state and start over">Reset</button>
         </div>
 
+        <!-- Section 0: Pipeline explanation -->
+        <section class="card">
+            <div class="page-title">Compiled Spreadsheet Runtime</div>
+            <p class="description">
+                This demo shows a spreadsheet model compiled into a deterministic worksheet artifact.
+                The application below does not implement the financial logic &mdash; it executes the
+                compiled artifact directly.
+            </p>
+            <p class="description" style="margin-bottom: 8px;">
+                Spreadsheet &rarr; Compile &rarr; Artifact &rarr; Runtime &rarr; Application
+            </p>
+        </section>
+
         <!-- Section 1: Model Assumptions -->
         <section class="card">
             <div class="page-title">DCF Valuation</div>
             <p class="description">
-                5-year discounted cash flow model. Modify the assumptions, build an artifact, release it, and run.
+                5-year discounted cash flow model. Modify the assumptions, build a compiled artifact, release it, and run.
             </p>
             <p class="unit-note">All values in USD. Units are illustrative.</p>
 
@@ -84,7 +97,10 @@
         <!-- Section 4: Application Runtime -->
         <section id="runtime-section" class="card">
             <h2>Application Runtime</h2>
-            <p class="section-explain">Values produced by executing the released model artifact.</p>
+            <p class="section-explain">
+                These values come from the compiled worksheet artifact, not from application code.
+                The application calls the released artifact &mdash; the spreadsheet remains the source of truth.
+            </p>
             <div id="runtime-meta"></div>
             <div id="runtime-content">
                 <p class="empty-state">No released artifact yet.</p>
@@ -110,16 +126,16 @@
         </section>
 
         <section class="note">
-            <p>Deterministic DCF runtime matching
-            <a href="https://github.com/reckoning-machines/fin123-core">fin123-core</a>
-            NPV semantics.</p>
+            <p>Compiled by
+            <a href="https://github.com/reckoning-machines/fin123-core">fin123-core</a>.
+            The model logic lives in the worksheet artifact, not in this application.</p>
             <details>
                 <summary>About this demo</summary>
                 <p>
-                    Parameters are submitted to a FastAPI backend that evaluates
-                    a 5-year DCF model. NPV uses Excel semantics (discount from t=1).
-                    Build creates a draft artifact with a content hash. Release promotes
-                    it. Runtime renders the released artifact's stored results.
+                    The analyst defines model assumptions. fin123 compiles them into a
+                    deterministic worksheet artifact with a content hash. The application
+                    executes the released artifact directly &mdash; no spreadsheet logic
+                    is reimplemented in Python or JavaScript.
                 </p>
             </details>
         </section>
