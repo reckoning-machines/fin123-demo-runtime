@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>fin123 Runtime Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <header>
+        <div class="brand"><span class="prompt">$</span> fin123</div>
+        <div class="header-subtitle">Runtime Demo</div>
+        <nav class="header-nav">
+            <a href="https://fin123.dev">fin123.dev</a>
+            <a href="https://github.com/reckoning-machines/fin123-core">fin123-core</a>
+            <a href="https://github.com/reckoning-machines/fin123-examples">fin123-examples</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="card">
+            <div class="page-title">DCF Valuation</div>
+            <p class="description">
+                Interactive example of a deterministic financial model runtime.
+                Modify the parameters and run a 5-year discounted cash flow model.
+            </p>
+
+            <form id="dcf-form">
+                <div class="input-grid">
+                    <div class="field">
+                        <label for="revenue_prev">Revenue (prior year)</label>
+                        <input type="number" id="revenue_prev" value="1000" step="any" min="0.01" required />
+                    </div>
+                    <div class="field">
+                        <label for="revenue_growth">Revenue growth</label>
+                        <input type="number" id="revenue_growth" value="0.08" step="0.01" min="-0.5" max="2.0" required />
+                    </div>
+                    <div class="field">
+                        <label for="margin">Operating margin</label>
+                        <input type="number" id="margin" value="0.25" step="0.01" min="0.01" max="1.0" required />
+                    </div>
+                    <div class="field">
+                        <label for="discount_rate">Discount rate</label>
+                        <input type="number" id="discount_rate" value="0.10" step="0.01" min="0.01" max="0.99" required />
+                    </div>
+                </div>
+
+                <button type="submit" id="run-btn">Run Model</button>
+            </form>
+        </section>
+
+        <section id="results" class="card hidden">
+            <h2>Results</h2>
+
+            <div class="summary-grid" id="summary-grid"></div>
+
+            <table id="results-table">
+                <thead>
+                    <tr>
+                        <th>Year</th>
+                        <th class="num">Revenue</th>
+                        <th class="num">FCF</th>
+                        <th class="num">Discount Factor</th>
+                        <th class="num">PV of FCF</th>
+                    </tr>
+                </thead>
+                <tbody id="results-body"></tbody>
+            </table>
+        </section>
+
+        <section id="error" class="card error-card hidden">
+            <h2>Error</h2>
+            <p id="error-message"></p>
+        </section>
+
+        <section class="note">
+            <strong>How this works</strong> &mdash;
+            Parameters are submitted to a FastAPI backend that runs deterministic DCF
+            logic. The NPV calculation uses Excel semantics (discount from t=1),
+            matching fin123-core's formula engine. The current runner implements
+            the math directly; fin123-core Workbook execution can be wired in
+            as a drop-in replacement.
+        </section>
+    </main>
+
+    <footer>
+        <span>&copy; 2026 Reckoning Machines</span>
+        <span class="footer-sep">&middot;</span>
+        <a href="https://github.com/reckoning-machines/fin123-core">fin123-core</a>
+        <span class="footer-sep">&middot;</span>
+        <a href="https://fin123.dev">fin123.dev</a>
+    </footer>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
