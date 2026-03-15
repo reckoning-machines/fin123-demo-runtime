@@ -385,6 +385,14 @@ tbody tr:last-child td { border-bottom: none; }
     border-color: var(--border);
 }
 
+.ws-viewer .ws-table tbody td {
+    color: var(--fg);
+}
+
+.ws-viewer .ws-table thead th {
+    color: var(--fg-dim);
+}
+
 /* Artifact inspector panel */
 .artifact-panel {
     background: var(--bg);

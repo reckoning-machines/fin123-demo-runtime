@@ -173,6 +173,8 @@
             .then(function (ws) {
                 artifactSection.classList.remove('hidden');
                 WorksheetViewer.render(worksheetContainer, ws);
+                var details = worksheetContainer.querySelectorAll('details');
+                for (var i = 0; i < details.length; i++) details[i].open = true;
             })
             .catch(function () { /* no artifact yet — leave hidden */ });
     }
