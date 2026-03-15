@@ -34,6 +34,20 @@
         return iso.replace('T', ' ').replace('+00:00', ' UTC');
     }
 
+    // ── Lifecycle rail ──
+
+    var stages = document.querySelectorAll('#lifecycle-rail .stage');
+
+    function updateLifecycleStage(active) {
+        for (var i = 0; i < stages.length; i++) {
+            if (stages[i].getAttribute('data-stage') === active) {
+                stages[i].classList.add('stage-active');
+            } else {
+                stages[i].classList.remove('stage-active');
+            }
+        }
+    }
+
     // ── Helpers ──
 
     function clearError() {
@@ -173,6 +187,7 @@
         api('POST', '/build', getParams())
             .then(function (data) {
                 showBuild(data);
+                updateLifecycleStage('build');
             })
             .catch(function (err) { showError(err.message); })
             .finally(function () {
@@ -195,6 +210,7 @@
             .then(function (data) {
                 showRuntime(data);
                 renderWorksheet();
+                updateLifecycleStage('runtime');
             })
             .catch(function (err) { showError(err.message); });
     }
@@ -210,6 +226,9 @@
                     showRuntimeMeta(state.released);
                     showRuntime(state.released.results);
                     renderWorksheet();
+                    updateLifecycleStage('runtime');
+                } else if (state.draft) {
+                    updateLifecycleStage('build');
                 }
             })
             .catch(function () { /* ignore — fresh state */ });

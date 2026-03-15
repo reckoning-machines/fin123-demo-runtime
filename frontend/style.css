@@ -77,6 +77,32 @@ main {
     gap: 20px;
 }
 
+/* Lifecycle rail */
+.lifecycle-rail {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+}
+
+.lifecycle-rail .stage {
+    color: var(--fg-dim);
+    opacity: 0.4;
+    transition: opacity 0.15s, color 0.15s;
+}
+
+.lifecycle-rail .stage-active {
+    color: var(--accent);
+    opacity: 1;
+}
+
+.lifecycle-rail .arrow {
+    color: var(--border);
+    font-size: 10px;
+}
+
 /* Cards */
 .card {
     background: var(--bg-card);
