@@ -37,10 +37,14 @@
 
         <!-- Section 0: Pipeline explanation -->
         <section class="card">
-            <div class="page-title">Compiled Spreadsheet Runtime</div>
+            <div class="page-title">Compiled Spreadsheet Model</div>
             <p class="description">
-                This is a DCF valuation model compiled into a worksheet that runs headlessly.
-                The application below has no model logic in it. It runs the compiled worksheet directly.
+                This demo runs a DCF valuation model built in a spreadsheet.
+                The spreadsheet is compiled with fin123 into a compiled worksheet.
+                The application below executes that compiled worksheet directly.
+            </p>
+            <p class="description" style="margin-bottom: 4px;">
+                <strong>The application never reimplements the model logic.</strong>
             </p>
             <p class="description" style="margin-bottom: 8px;">
                 Spreadsheet &rarr; Compile &rarr; Compiled Worksheet &rarr; Runtime &rarr; Application
