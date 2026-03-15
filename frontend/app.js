@@ -90,17 +90,21 @@
 
     // ── Section renderers ──
 
-    function showBuild(data) {
+    function showBuild(data, released) {
+        var statusClass = released ? 'status-released' : 'status-draft';
+        var statusLabel = released ? 'released' : 'draft';
         buildContent.innerHTML =
             '<div class="meta-block">' +
-                '<span class="status-badge status-draft">draft</span>' +
+                '<span class="status-badge ' + statusClass + '">' + statusLabel + '</span>' +
                 '<span class="meta-line">Hash: <span class="hash">sha256:' + data.content_hash + '</span></span>' +
                 '<span class="meta-line">Built: ' + fmtTime(data.built_at) + '</span>' +
                 '<span class="meta-line">EV: ' + fmtCurrency(data.results.enterprise_value) + '</span>' +
-            '</div>' +
-            '<button id="release-btn" class="btn-release">Release to Prod</button>';
+            '</div>';
 
-        document.getElementById('release-btn').addEventListener('click', doRelease);
+        if (!released) {
+            buildContent.innerHTML += '<button id="release-btn" class="btn-release">Release to Prod</button>';
+            document.getElementById('release-btn').addEventListener('click', doRelease);
+        }
     }
 
     function showRelease(data) {
@@ -205,6 +209,7 @@
 
         api('POST', '/release')
             .then(function (data) {
+                showBuild(data, true);
                 showRelease(data);
                 showRuntimeMeta(data);
                 return api('POST', '/run');
@@ -222,7 +227,7 @@
     function hydrate() {
         api('GET', '/state')
             .then(function (state) {
-                if (state.draft) showBuild(state.draft);
+                if (state.draft) showBuild(state.draft, !!state.released);
                 if (state.released) {
                     showRelease(state.released);
                     showRuntimeMeta(state.released);
