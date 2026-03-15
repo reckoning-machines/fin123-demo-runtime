@@ -107,6 +107,18 @@ def get_released_artifact() -> dict:
     return _released_compiled.model_dump()
 
 
+@app.post("/reset")
+def post_reset() -> dict:
+    """Clear all in-memory lifecycle state."""
+    global _draft, _draft_compiled, _released, _released_compiled, _version
+    _draft = None
+    _draft_compiled = None
+    _released = None
+    _released_compiled = None
+    _version = 0
+    return {"ok": True}
+
+
 @app.post("/run-dcf", response_model=DCFResponse)
 def post_run_dcf(params: DCFRequest) -> DCFResponse:
     """Run the DCF model with the given parameters (legacy endpoint)."""

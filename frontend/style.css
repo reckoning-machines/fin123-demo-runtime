@@ -103,6 +103,25 @@ main {
     font-size: 10px;
 }
 
+.btn-reset {
+    margin-left: auto;
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 10px;
+    background: transparent;
+    color: var(--fg-dim);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+}
+
+.btn-reset:hover {
+    color: var(--fg);
+    border-color: var(--fg-dim);
+}
+
 /* Cards */
 .card {
     background: var(--bg-card);

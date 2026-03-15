@@ -236,8 +236,24 @@
             .catch(function () { /* ignore — fresh state */ });
     }
 
+    function doReset() {
+        api('POST', '/reset')
+            .then(function () {
+                buildContent.innerHTML = '<p class="empty-state">No artifact built yet.</p>';
+                releaseContent.innerHTML = '<p class="empty-state">No released artifact.</p>';
+                runtimeMeta.innerHTML = '';
+                runtimeContent.innerHTML = '<p class="empty-state">No released artifact yet.</p>';
+                artifactSection.classList.add('hidden');
+                worksheetContainer.innerHTML = '';
+                updateLifecycleStage('author');
+                clearError();
+            })
+            .catch(function (err) { showError(err.message); });
+    }
+
     // ── Bind ──
 
     buildBtn.addEventListener('click', doBuild);
+    document.getElementById('reset-btn').addEventListener('click', doReset);
     hydrate();
 })();
