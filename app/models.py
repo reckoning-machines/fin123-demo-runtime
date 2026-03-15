@@ -1,5 +1,7 @@
 """Request and response models for the DCF demo endpoint."""
 
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 
@@ -36,3 +38,32 @@ class DCFResponse(BaseModel):
     years: list[YearRow]
     enterprise_value: float
     params: DCFRequest
+
+
+class BuildResponse(BaseModel):
+    """Draft artifact from a build."""
+
+    params: DCFRequest
+    results: DCFResponse
+    content_hash: str
+    built_at: str
+    status: str = "draft"
+
+
+class ReleaseResponse(BaseModel):
+    """Released artifact."""
+
+    params: DCFRequest
+    results: DCFResponse
+    content_hash: str
+    built_at: str
+    released_at: str
+    version: int
+    status: str = "released"
+
+
+class StateResponse(BaseModel):
+    """Current lifecycle state."""
+
+    draft: BuildResponse | None = None
+    released: ReleaseResponse | None = None

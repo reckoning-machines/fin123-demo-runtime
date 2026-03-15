@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="/static/worksheet_viewer.css" />
 </head>
 <body>
     <header>
@@ -21,60 +22,65 @@
     </header>
 
     <main>
+
+        <!-- Section 1: Model Assumptions -->
         <section class="card">
             <div class="page-title">DCF Valuation</div>
             <p class="description">
-                5-year discounted cash flow model. Modify the assumptions and run.
+                5-year discounted cash flow model. Modify the assumptions, build an artifact, release it, and run.
             </p>
             <p class="unit-note">All values in USD. Units are illustrative.</p>
 
-            <form id="dcf-form">
-                <div class="input-grid">
-                    <div class="field">
-                        <label for="revenue_prev">Revenue (prior year)</label>
-                        <input type="number" id="revenue_prev" value="1000" step="any" min="0.01" required />
-                    </div>
-                    <div class="field">
-                        <label for="revenue_growth">Revenue growth</label>
-                        <input type="number" id="revenue_growth" value="0.08" step="0.01" min="-0.5" max="2.0" required />
-                    </div>
-                    <div class="field">
-                        <label for="margin">Operating margin</label>
-                        <input type="number" id="margin" value="0.25" step="0.01" min="0.01" max="1.0" required />
-                    </div>
-                    <div class="field">
-                        <label for="discount_rate">Discount rate</label>
-                        <input type="number" id="discount_rate" value="0.10" step="0.01" min="0.01" max="0.99" required />
-                    </div>
+            <div class="input-grid">
+                <div class="field">
+                    <label for="revenue_prev">Revenue (prior year)</label>
+                    <input type="number" id="revenue_prev" value="1000" step="any" min="0.01" required />
                 </div>
+                <div class="field">
+                    <label for="revenue_growth">Revenue growth</label>
+                    <input type="number" id="revenue_growth" value="0.08" step="0.01" min="-0.5" max="2.0" required />
+                </div>
+                <div class="field">
+                    <label for="margin">Operating margin</label>
+                    <input type="number" id="margin" value="0.25" step="0.01" min="0.01" max="1.0" required />
+                </div>
+                <div class="field">
+                    <label for="discount_rate">Discount rate</label>
+                    <input type="number" id="discount_rate" value="0.10" step="0.01" min="0.01" max="0.99" required />
+                </div>
+            </div>
 
-                <button type="submit" id="run-btn">Run Model</button>
-            </form>
+            <button id="build-btn">Build Artifact</button>
         </section>
 
-        <section id="results" class="card hidden">
-            <h2>Model Output</h2>
-
-            <div class="summary-grid" id="summary-grid"></div>
-
-            <p class="table-caption">Yearly projection</p>
-            <table id="results-table">
-                <thead>
-                    <tr>
-                        <th>Year</th>
-                        <th class="num">Revenue ($)</th>
-                        <th class="num">FCF ($)</th>
-                        <th class="num">Discount Factor</th>
-                        <th class="num">PV of FCF ($)</th>
-                    </tr>
-                </thead>
-                <tbody id="results-body"></tbody>
-            </table>
-            <p class="result-note">
-                5-year projection only. No terminal value included.
-            </p>
+        <!-- Section 2: Build Artifact -->
+        <section id="build-section" class="card">
+            <h2>Build Artifact</h2>
+            <div id="build-content">
+                <p class="empty-state">No artifact built yet.</p>
+            </div>
         </section>
 
+        <!-- Section 3: Released Artifact -->
+        <section id="release-section" class="card">
+            <h2>Released Artifact</h2>
+            <div id="release-content">
+                <p class="empty-state">No released artifact.</p>
+            </div>
+        </section>
+
+        <!-- Section 4: Runtime Output -->
+        <section id="runtime-section" class="card">
+            <h2>Runtime Output</h2>
+            <div id="runtime-meta"></div>
+            <div id="runtime-content">
+                <p class="empty-state">No released artifact yet.</p>
+            </div>
+            <h3 class="worksheet-heading hidden" id="worksheet-heading">Released Worksheet Artifact</h3>
+            <div id="worksheet-container"></div>
+        </section>
+
+        <!-- Error -->
         <section id="error" class="card error-card hidden">
             <h2>Error</h2>
             <p id="error-message"></p>
@@ -89,8 +95,8 @@
                 <p>
                     Parameters are submitted to a FastAPI backend that evaluates
                     a 5-year DCF model. NPV uses Excel semantics (discount from t=1).
-                    The runner implements the math directly; fin123-core Workbook
-                    execution can replace it as a drop-in.
+                    Build creates a draft artifact with a content hash. Release promotes
+                    it. Runtime renders the released artifact's stored results.
                 </p>
             </details>
         </section>
@@ -104,6 +110,7 @@
         <a href="https://fin123.dev">fin123.dev</a>
     </footer>
 
+    <script src="/static/worksheet_viewer.js"></script>
     <script src="/static/app.js"></script>
 </body>
 </html>

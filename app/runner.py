@@ -1,34 +1,17 @@
-"""DCF model runner.
+"""DCF model runner and worksheet compiler.
 
-This module implements the same DCF logic described in the fin123-examples
-dcf-valuation example. The NPV calculation uses Excel semantics (discount
-from t=1), matching fin123-core's _fn_npv in formulas/fn_finance.py.
+The DCF runner implements the same logic described in the fin123-examples
+dcf-valuation example. NPV uses Excel semantics (discount from t=1),
+matching fin123-core's formulas/fn_finance.py.
 
---- fin123-core integration ---
-
-To replace this standalone runner with fin123-core execution:
-
-1. Create a project directory with workbook.yaml and fin123.yaml
-2. Use the Workbook API:
-
-    from pathlib import Path
-    from fin123 import Workbook
-
-    wb = Workbook(
-        Path("path/to/dcf_project"),
-        overrides={
-            "revenue_prev": params.revenue_prev,
-            "revenue_growth": params.revenue_growth,
-            "margin": params.margin,
-            "discount_rate": params.discount_rate,
-        },
-    )
-    result = wb.run()
-    scalars = result.scalars  # dict of all computed scalar values
-
-The standalone implementation below uses the same math so results
-will match when the integration is wired up.
+The worksheet compiler wraps DCF results into a real fin123 compiled
+worksheet artifact using the fin123-core worksheet pipeline. No project
+directory or filesystem required — everything runs in memory.
 """
+
+from fin123.worksheet import compile_worksheet, from_json_records, parse_worksheet_view
+from fin123.worksheet.compiled import CompiledWorksheet
+from fin123.worksheet.types import ColumnSchema, ColumnType
 
 from app.models import DCFRequest, DCFResponse, YearRow
 
@@ -79,3 +62,43 @@ def run_dcf(params: DCFRequest) -> DCFResponse:
         enterprise_value=ev,
         params=params,
     )
+
+
+# --- Worksheet compilation ---
+
+_DCF_SCHEMA = [
+    ColumnSchema(name="year", dtype=ColumnType.INT64),
+    ColumnSchema(name="revenue", dtype=ColumnType.FLOAT64),
+    ColumnSchema(name="fcf", dtype=ColumnType.FLOAT64),
+    ColumnSchema(name="discount_factor", dtype=ColumnType.FLOAT64),
+    ColumnSchema(name="pv_fcf", dtype=ColumnType.FLOAT64),
+]
+
+_DCF_SPEC = {
+    "name": "dcf_projection",
+    "title": "DCF Projection",
+    "columns": [
+        {"source": "year", "label": "Year"},
+        {"source": "revenue", "label": "Revenue",
+         "display_format": {"type": "currency", "symbol": "$", "places": 2}},
+        {"source": "fcf", "label": "Free Cash Flow",
+         "display_format": {"type": "currency", "symbol": "$", "places": 2}},
+        {"source": "discount_factor", "label": "Discount Factor",
+         "display_format": {"type": "decimal", "places": 4}},
+        {"source": "pv_fcf", "label": "PV of FCF",
+         "display_format": {"type": "currency", "symbol": "$", "places": 2}},
+    ],
+}
+
+
+def compile_dcf_worksheet(response: DCFResponse) -> CompiledWorksheet:
+    """Compile DCF results into a real fin123 worksheet artifact.
+
+    Converts year-by-year projections into a ViewTable, applies a static
+    worksheet spec, and produces a CompiledWorksheet with genuine provenance
+    and a deterministic content hash.
+    """
+    records = [y.model_dump() for y in response.years]
+    vt = from_json_records(records, _DCF_SCHEMA, source_label="dcf-demo-build")
+    spec = parse_worksheet_view(_DCF_SPEC)
+    return compile_worksheet(vt, spec)
