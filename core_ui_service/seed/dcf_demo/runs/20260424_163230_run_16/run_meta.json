@@ -1,0 +1,43 @@
+{
+  "artifact_versions_used": {},
+  "assertions_failed_count": 0,
+  "assertions_status": "pass",
+  "assertions_warn_count": 0,
+  "effective_params": {
+    "active_ticker": "AAPL",
+    "ebit_margin": 0.22,
+    "revenue_growth": 0.08,
+    "share_count": 2000,
+    "tax_rate": 0.21,
+    "terminal_growth": 0.025,
+    "wacc": 0.1
+  },
+  "engine_version": "0.6.0",
+  "export_hash": "21f3f4a5ca98bdd22a5921fbeb1bdd7a6c1d114f78b4dd53497f9de7871f420f",
+  "export_row_counts": {
+    "enriched": 66000,
+    "ticker_summary": 10
+  },
+  "input_hashes": {
+    "/Users/jedgore/dev/fin123-core/dcf_demo/inputs/operating_data.csv": "04159fd838962117a9e2d060111ddbe0dea5b51730bef91db24211645dbb10e7"
+  },
+  "model_id": "c27d76fa-ab77-4c35-bc19-a5c58e5828a0",
+  "model_version_id": "v0018",
+  "overlay_hash": "4799b7ea2d7b1861e7977bed5b0a92d2b3d3505d6a6d165ed3c1c3391631168f",
+  "params_hash": "240cd52b54bdb791df2d2979e5a526671363da928f167c6245a819ccc2350279",
+  "pinned": false,
+  "plugin_hash": "4c1fef34d6a7707975b4c9cfe08f4f8e1b9d5a5b0fcd6ad16518cb6a98a095db",
+  "plugins": {},
+  "run_id": "20260424_163230_run_16",
+  "scenario_name": "",
+  "sorted_exports": [],
+  "timestamp": "2026-04-24T16:32:30.543709+00:00",
+  "timings_ms": {
+    "eval_scalars": 5.57,
+    "eval_tables": 88.3,
+    "export_outputs": 35.6,
+    "hash_inputs": 0.38,
+    "resolve_params": 0.01
+  },
+  "workbook_spec_hash": "83bf24cd39b4ae52079b98470f73b36a53ea2ac5add9f628d67410eec23761d7"
+}

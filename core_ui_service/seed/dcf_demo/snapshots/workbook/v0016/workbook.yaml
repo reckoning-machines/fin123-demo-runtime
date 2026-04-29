@@ -1,0 +1,379 @@
+version: 1
+params:
+  active_ticker: AAPL
+  revenue_growth: 0.08
+  ebit_margin: 0.22
+  tax_rate: 0.21
+  wacc: 0.1
+  terminal_growth: 0.025
+  share_count: 2000
+scenarios:
+  base:
+    overrides:
+      revenue_growth: 0.08
+      ebit_margin: 0.22
+      wacc: 0.1
+      terminal_growth: 0.025
+  bull:
+    overrides:
+      revenue_growth: 0.14
+      ebit_margin: 0.28
+      wacc: 0.08
+      terminal_growth: 0.03
+  bear:
+    overrides:
+      revenue_growth: 0.03
+      ebit_margin: 0.15
+      wacc: 0.12
+      terminal_growth: 0.02
+tables:
+  operating_data:
+    source: inputs/operating_data.csv
+    format: csv
+plans:
+- name: enriched
+  source: operating_data
+  steps:
+  - func: with_column
+    name: gross_profit
+    expression: col("revenue") - col("cogs")
+  - func: with_column
+    name: ebit
+    expression: col("gross_profit") - col("opex")
+  - func: with_column
+    name: ebitda
+    expression: col("ebit") + col("da")
+  - func: with_column
+    name: nopat
+    expression: col("ebit") * lit(0.79)
+  - func: with_column
+    name: fcf
+    expression: col("nopat") + col("da") - col("capex")
+  - func: with_column
+    name: gross_margin
+    expression: col("gross_profit") / col("revenue")
+  - func: with_column
+    name: ebit_margin_actual
+    expression: col("ebit") / col("revenue")
+  - func: sort
+    by:
+    - ticker
+    - year
+    - quarter
+- name: ticker_summary
+  source: enriched
+  steps:
+  - func: group_agg
+    group_by:
+    - ticker
+    aggs:
+      total_revenue: sum(revenue)
+      total_cogs: sum(cogs)
+      total_ebit: sum(ebit)
+      total_ebitda: sum(ebitda)
+      total_nopat: sum(nopat)
+      total_fcf: sum(fcf)
+      avg_gross_margin: mean(gross_margin)
+      avg_ebit_margin: mean(ebit_margin_actual)
+      avg_price: mean(price)
+      avg_shares: mean(shares)
+  - func: sort
+    by:
+    - ticker
+outputs:
+- name: base_revenue
+  type: scalar
+  func: lookup_scalar
+  args:
+    table_name: ticker_summary
+    key_col: ticker
+    value_col: total_revenue
+    key_value: $active_ticker
+- name: base_ebitda
+  type: scalar
+  func: lookup_scalar
+  args:
+    table_name: ticker_summary
+    key_col: ticker
+    value_col: total_ebitda
+    key_value: $active_ticker
+- name: base_fcf
+  type: scalar
+  func: lookup_scalar
+  args:
+    table_name: ticker_summary
+    key_col: ticker
+    value_col: total_fcf
+    key_value: $active_ticker
+- name: last_price
+  type: scalar
+  func: lookup_scalar
+  args:
+    table_name: ticker_summary
+    key_col: ticker
+    value_col: avg_price
+    key_value: $active_ticker
+- name: rev_y1
+  type: scalar
+  formula: =base_revenue * (1 + revenue_growth)
+- name: rev_y2
+  type: scalar
+  formula: =rev_y1 * (1 + revenue_growth)
+- name: rev_y3
+  type: scalar
+  formula: =rev_y2 * (1 + revenue_growth)
+- name: rev_y4
+  type: scalar
+  formula: =rev_y3 * (1 + revenue_growth)
+- name: rev_y5
+  type: scalar
+  formula: =rev_y4 * (1 + revenue_growth)
+- name: ebit_y1
+  type: scalar
+  formula: =rev_y1 * ebit_margin
+- name: nopat_y1
+  type: scalar
+  formula: =ebit_y1 * (1 - tax_rate)
+- name: fcf_y1
+  type: scalar
+  formula: =nopat_y1
+- name: ebit_y2
+  type: scalar
+  formula: =rev_y2 * ebit_margin
+- name: nopat_y2
+  type: scalar
+  formula: =ebit_y2 * (1 - tax_rate)
+- name: fcf_y2
+  type: scalar
+  formula: =nopat_y2
+- name: ebit_y3
+  type: scalar
+  formula: =rev_y3 * ebit_margin
+- name: nopat_y3
+  type: scalar
+  formula: =ebit_y3 * (1 - tax_rate)
+- name: fcf_y3
+  type: scalar
+  formula: =nopat_y3
+- name: ebit_y4
+  type: scalar
+  formula: =rev_y4 * ebit_margin
+- name: nopat_y4
+  type: scalar
+  formula: =ebit_y4 * (1 - tax_rate)
+- name: fcf_y4
+  type: scalar
+  formula: =nopat_y4
+- name: ebit_y5
+  type: scalar
+  formula: =rev_y5 * ebit_margin
+- name: nopat_y5
+  type: scalar
+  formula: =ebit_y5 * (1 - tax_rate)
+- name: fcf_y5
+  type: scalar
+  formula: =nopat_y5
+- name: pv_fcf
+  type: scalar
+  formula: =NPV(wacc, fcf_y1, fcf_y2, fcf_y3, fcf_y4, fcf_y5)
+- name: terminal_value
+  type: scalar
+  formula: =fcf_y5 * (1 + terminal_growth) / (wacc - terminal_growth)
+- name: pv_terminal
+  type: scalar
+  formula: =terminal_value / (1 + wacc) ^ 5
+- name: enterprise_value
+  type: scalar
+  formula: =pv_fcf + pv_terminal
+- name: equity_value
+  type: scalar
+  formula: =enterprise_value
+- name: value_per_share
+  type: scalar
+  formula: =equity_value / share_count
+- name: implied_upside
+  type: scalar
+  formula: =(value_per_share - last_price) / last_price
+- name: enriched
+  type: table
+- name: ticker_summary
+  type: table
+sheets:
+- name: DCF Model
+  n_rows: 35
+  n_cols: 7
+  cells:
+    A1:
+      value: Ticker
+    B1:
+      formula: =PARAM("active_ticker")
+    A3:
+      value: ASSUMPTIONS
+    A4:
+      value: Revenue Growth
+    B4:
+      formula: =PARAM("revenue_growth")
+    A5:
+      value: EBIT Margin
+    B5:
+      formula: =PARAM("ebit_margin")
+    A6:
+      value: Tax Rate
+    B6:
+      formula: =PARAM("tax_rate")
+    A7:
+      value: WACC
+    B7:
+      formula: =PARAM("wacc")
+    A8:
+      value: Terminal Growth
+    B8:
+      formula: =PARAM("terminal_growth")
+    A9:
+      value: Shares Outstanding
+    B9:
+      formula: =PARAM("share_count")
+    A11:
+      value: HISTORICAL
+    A12:
+      value: Base Revenue
+    B12:
+      formula: =base_revenue
+    A13:
+      value: Base EBITDA
+    B13:
+      formula: =base_ebitda
+    A14:
+      value: Base FCF
+    B14:
+      formula: =base_fcf
+    A15:
+      value: Last Price
+    B15:
+      formula: =last_price
+    A17:
+      value: PROJECTIONS
+    B17:
+      value: Year 1
+    C17:
+      value: Year 2
+    D17:
+      value: Year 3
+    E17:
+      value: Year 4
+    F17:
+      value: Year 5
+    A18:
+      value: Revenue
+    B18:
+      formula: =rev_y1
+    C18:
+      formula: =rev_y2
+    D18:
+      formula: =rev_y3
+    E18:
+      formula: =rev_y4
+    F18:
+      formula: =rev_y5
+    A19:
+      value: EBIT
+    B19:
+      formula: =ebit_y1
+    C19:
+      formula: =ebit_y2
+    D19:
+      formula: =ebit_y3
+    E19:
+      formula: =ebit_y4
+    F19:
+      formula: =ebit_y5
+    A20:
+      value: NOPAT
+    B20:
+      formula: =nopat_y1
+    C20:
+      formula: =nopat_y2
+    D20:
+      formula: =nopat_y3
+    E20:
+      formula: =nopat_y4
+    F20:
+      formula: =nopat_y5
+    A21:
+      value: FCF
+    B21:
+      formula: =fcf_y1
+    C21:
+      formula: =fcf_y2
+    D21:
+      formula: =fcf_y3
+    E21:
+      formula: =fcf_y4
+    F21:
+      formula: =fcf_y5
+    A23:
+      value: VALUATION
+    A24:
+      value: PV of FCFs
+    B24:
+      formula: =pv_fcf
+    A25:
+      value: Terminal Value
+    B25:
+      formula: =terminal_value
+    A26:
+      value: PV Terminal
+    B26:
+      formula: =pv_terminal
+    A27:
+      value: Enterprise Value
+    B27:
+      formula: =enterprise_value
+    A28:
+      value: Equity Value
+    B28:
+      formula: =equity_value
+    A29:
+      value: Value per Share
+    B29:
+      formula: =value_per_share
+    A30:
+      value: Implied Upside
+    B30:
+      formula: =implied_upside
+assertions:
+- name: ev_positive
+  expr: $enterprise_value > 0
+  severity: error
+- name: margin_bounded
+  expr: $ebit_margin > 0
+  severity: error
+- name: wacc_above_terminal
+  expr: $wacc > $terminal_growth
+  severity: error
+- name: growth_reasonable
+  expr: $revenue_growth < 0.50
+  severity: warn
+model_id: c27d76fa-ab77-4c35-bc19-a5c58e5828a0
+bindings:
+  active_ticker:
+    sheet: DCF Model
+    addr: B1
+  revenue_growth:
+    sheet: DCF Model
+    addr: B4
+  ebit_margin:
+    sheet: DCF Model
+    addr: B5
+  tax_rate:
+    sheet: DCF Model
+    addr: B6
+  wacc:
+    sheet: DCF Model
+    addr: B7
+  terminal_growth:
+    sheet: DCF Model
+    addr: B8
+  share_count:
+    sheet: DCF Model
+    addr: B9
