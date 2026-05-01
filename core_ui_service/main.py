@@ -26,7 +26,10 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fin123.ui.server import create_app as create_core_ui_app
 
-from core_ui_service.lifecycle import router as lifecycle_router
+try:
+    from core_ui_service.lifecycle import router as lifecycle_router
+except ModuleNotFoundError:
+    from lifecycle import router as lifecycle_router
 
 PROJECT_DIR = Path(
     os.environ.get(

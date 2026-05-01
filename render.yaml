@@ -4,12 +4,10 @@ services:
     runtime: python
     rootDir: core_ui_service
     buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn core_ui_service.main:app --host 0.0.0.0 --port $PORT --workers 2
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT --workers 2
     healthCheckPath: /healthz
     envVars:
       - key: PYTHON_VERSION
         value: "3.12"
       - key: FIN123_PROJECT_DIR
-        value: /opt/render/project/src/core_ui_service/seed/dcf_demo
-      - key: PYTHONPATH
-        value: /opt/render/project/src
+        value: /opt/render/project/src/seed/dcf_demo

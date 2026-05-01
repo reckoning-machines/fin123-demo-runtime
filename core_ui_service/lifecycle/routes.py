@@ -12,14 +12,14 @@ from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException
 
-from core_ui_service.lifecycle.models import (
+from .models import (
     BuildResponse,
     DCFRequest,
     DCFResponse,
     ReleaseResponse,
     StateResponse,
 )
-from core_ui_service.lifecycle.runner import compile_dcf_worksheet, run_dcf
+from .runner import compile_dcf_worksheet, run_dcf
 
 from fin123.worksheet.compiled import CompiledWorksheet
 

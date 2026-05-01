@@ -1,3 +1,3 @@
-from core_ui_service.lifecycle.routes import router
+from .routes import router
 
 __all__ = ["router"]

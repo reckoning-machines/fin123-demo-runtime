@@ -8,7 +8,7 @@ from fin123.worksheet import compile_worksheet, from_json_records, parse_workshe
 from fin123.worksheet.compiled import CompiledWorksheet
 from fin123.worksheet.types import ColumnSchema, ColumnType
 
-from core_ui_service.lifecycle.models import DCFRequest, DCFResponse, YearRow
+from .models import DCFRequest, DCFResponse, YearRow
 
 PROJECTION_YEARS = 5
 
